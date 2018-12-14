@@ -40,8 +40,10 @@ const int kPinServoRight = 9;
 const int kPinServoRaise = 10;
 const int kPinServoArm = 11;
 
-//Servo armRaise;
-//Servo armOpen;
+Servo armRaise;
+Servo armOpen;
+bool armUp=true;
+bool armOpenF=false;
 
 ServoDriveTrain drivetrain(kPinServoLeft, kPinServoRight);
 // HbridgeDriveTrain drivetrain;
@@ -61,10 +63,10 @@ void setup() {
   ds.init();     // setup drive station comms 
   flashyLight.init(); // setup the LED blinker
   drivetrain.init();  // setup the drive train to use the servos
-  //armRaise.attach(kPinServoRaise);
-  //armRaise.write(90);
-  //armOpen.attach(kPinServoArm);
-  //armOpen.write(90);
+  armRaise.attach(kPinServoRaise);
+  armRaise.write(145);
+  armOpen.attach(kPinServoArm);
+  armOpen.write(180);
 }
 
 /* 
@@ -79,11 +81,27 @@ void loop() {
     switch (input) {
       case 'f':
         speed_state = Blinker::FAST;
-          //armRaise.write(45);
+        if(armUp){
+          armRaise.write(45);
+          //up is 145, down is 45
+          armUp=false;
+        }else{
+          armRaise.write(145);
+          armUp=true;
+        }
         break;
       case 'g':
         speed_state = Blinker::SLOW;
-         //armOpen.write(150);
+         
+         //150 open, 180 closed
+          if(armOpenF){
+          armOpen.write(180);
+      
+          armOpenF=false;
+        }else{
+          armOpen.write(150);
+          armOpenF=true;
+        }
         break;
       case 'h':
         speed_state = Blinker::HYPER;
